@@ -3,8 +3,8 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^usuarios/$', views.UsuariosList.as_view(), name='cursos-list'),
-    url(r'^usuarios/(?P<pk>[0-9]+)/$', views.UsuariosDetail.as_view(), name='cursos-detail'),
+    url(r'^usuarios/$', views.UsuariosList.as_view(), name='usuarios-list'),
+    url(r'^usuarios/(?P<pk>[0-9]+)/$', views.UsuariosDetail.as_view(), name='usuarios-detail'),
 
     url(r'^cursos/$', views.CursosList.as_view()),
     url(r'^cursos/(?P<pk>[0-9]+)/$', views.CursosDetail.as_view()),
