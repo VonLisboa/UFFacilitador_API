@@ -28,7 +28,7 @@ urlpatterns = [
     # path('', include(router.urls)),
     path('admin/', admin.site.urls),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-    url(r'^', include('api.urls')),
+    url(r'^', include('api.uffacilitador.urls')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
 ]
