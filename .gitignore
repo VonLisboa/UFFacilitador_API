@@ -1,21 +1,10 @@
-.quasar
-.DS_Store
-.thumbs.db
-node_modules
-/dist
-/node_modules
-/src-cordova/node_modules
-/src-cordova/platforms
-/src-cordova/plugins
-/src-cordova/www
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.db
+*.sqlite3
+*.pyc
+*~
+.*
+env
 
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+# Accept these files in the repository
+!.gitignore
+!.travis.yml
