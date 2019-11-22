@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api.apps.SnippetsConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [

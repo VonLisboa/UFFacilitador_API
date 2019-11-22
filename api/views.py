@@ -1,33 +1,13 @@
 from django.contrib.auth.models import User
-from rest_framework import permissions, renderers, viewsets
-from rest_framework.decorators import detail_route
+from django.db.models import Q
+from rest_framework import viewsets, status
 from rest_framework.response import Response
+from django.http import Http404
 
-from api.models import Snippet
-from api.permissions import IsOwnerOrReadOnly
-from api.serializers import SnippetSerializer, UserSerializer
-
-
-class SnippetViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly, )
-
-    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
-    def highlight(self, request, *args, **kwargs):
-        snippet = self.get_object()
-        return Response(snippet.highlighted)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+from api.serializers import UserSerializer, UserDisciplinasSerializer
+from api.models import Cursos, Disciplinas, GradeCurricular, Repositorios, Sistemas, UserDisciplinas
+from api.serializers import CursosSerializer, DisciplinasSerializer, \
+    GradeCurricularSerializer, RepositoriosSerializer, SistemasSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -37,13 +17,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-from .models import Cursos, Disciplinas, GradeCurricular, Repositorios, Sistemas
-from .serializers import CursosSerializer, DisciplinasSerializer, \
-    GradeCurricularSerializer, RepositoriosSerializer, SistemasSerializer
 
 class CursosList(viewsets.ModelViewSet):
     queryset = Cursos.objects.all()
     serializer_class = CursosSerializer
+
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
     def perform_create(self, serializer):
@@ -51,11 +29,62 @@ class CursosList(viewsets.ModelViewSet):
 
 
 class DisciplinasList(viewsets.ModelViewSet):
-    queryset = Disciplinas.objects.all()
     serializer_class = DisciplinasSerializer
 
-    #def perform_create(self, serializer):
-    #    serializer.save(autor=self.request.user)
+    def get_queryset(self):
+        if 'pk' in self.kwargs:
+            return Disciplinas.objects.filter(pk=self.kwargs['pk'])
+
+        user_id = self.request.query_params.get('user_id')
+        is_admin = self.request.query_params.get('is_admin')
+
+        if is_admin == '1':
+            queryset = Disciplinas.objects.all()
+        else:
+            queryset = Disciplinas.objects.all().filter(Q(status=1) | Q(autor=user_id))
+        return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return Disciplinas.objects.get(id=pk)
+
+
+class UserDisciplinasList(viewsets.ModelViewSet):
+    serializer_class = UserDisciplinasSerializer
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return UserDisciplinas.objects.get(id=pk)
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user_id')
+        first = self.request.query_params.get('first')
+        queryset = UserDisciplinas.objects.all().filter(user_id=user_id)
+        if first != '1':
+            return queryset
+        items, item_ids = [], []
+        for item in queryset:
+            if item.disciplina not in item_ids:
+                items.append(item)
+                item_ids.append(item.disciplina)
+
+        return items
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.delete()
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class GradeCurricularList(viewsets.ModelViewSet):
@@ -71,4 +100,3 @@ class RepositoriosList(viewsets.ModelViewSet):
 class SistemasList(viewsets.ModelViewSet):
     queryset = Sistemas.objects.all()
     serializer_class = SistemasSerializer
-
