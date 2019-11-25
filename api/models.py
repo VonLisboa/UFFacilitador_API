@@ -29,9 +29,9 @@ class UserDisciplinas(models.Model):
     disciplina = models.ForeignKey(Disciplinas, on_delete=models.DO_NOTHING)
     user = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING)
     sala = models.CharField(max_length=20, null=True)
-    dia = models.IntegerField(null=True)
-    hora_inicio = models.TimeField(null=True)
-    hora_fim = models.TimeField(null=True)
+    dia = models.IntegerField(default=0, null=True)
+    hora_inicio = models.CharField(max_length=6, null=True)
+    hora_fim = models.CharField(max_length=6, null=True)
 
 
 class GradeCurricular(models.Model):

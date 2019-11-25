@@ -23,6 +23,14 @@ class DisciplinasSerializer(serializers.HyperlinkedModelSerializer):
         model = Disciplinas
         fields = '__all__'
 
+    def update(self, instance, validated_data):
+        # Update the Foo instance
+        print(instance.sala)
+        instance.sala = validated_data['sala']
+        print(instance.sala)
+        # instance.save()
+        return instance
+
 
 class UserDisciplinasSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -65,9 +65,13 @@ class UserDisciplinasList(viewsets.ModelViewSet):
         return UserDisciplinas.objects.get(id=pk)
 
     def get_queryset(self):
+        disciplina = self.request.query_params.get('disciplina')
         user_id = self.request.query_params.get('user_id')
         first = self.request.query_params.get('first')
-        queryset = UserDisciplinas.objects.all().filter(user_id=user_id)
+        if disciplina:
+            queryset = UserDisciplinas.objects.all().filter(user_id=user_id, disciplina=disciplina)
+        else:
+            queryset = UserDisciplinas.objects.all().filter(user_id=user_id)
         if first != '1':
             return queryset
         items, item_ids = [], []
