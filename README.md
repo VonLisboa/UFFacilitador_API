@@ -8,6 +8,6 @@ Source code for the [Django REST framework tutorial][tut].
 
 ### Screenshots
 
-![image](/screenshot/024357.png)
-![image](/screenshot/024447.png)
-![image](/screenshot/044447.png)
+![image](/screenshots/024357.png)
+![image](/screenshots/024447.png)
+![image](/screenshots/044447.png)
