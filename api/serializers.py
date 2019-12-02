@@ -1,15 +1,12 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from api.models import Cursos, Disciplinas, GradeCurricular, Repositorios, Sistemas, UserDisciplinas
+from api.models import Cursos, Disciplinas, GradeCurricular, Repositorios, Sistemas, UserDisciplinas, Chat
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    snippets = serializers.HyperlinkedRelatedField(
-        many=True, view_name='snippet-detail', read_only=True)
-
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'snippets')
+        fields = '__all__'
 
 
 class CursosSerializer(serializers.HyperlinkedModelSerializer):
@@ -53,4 +50,10 @@ class RepositoriosSerializer(serializers.HyperlinkedModelSerializer):
 class SistemasSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sistemas
+        fields = '__all__'
+
+
+class ChatSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Chat
         fields = '__all__'

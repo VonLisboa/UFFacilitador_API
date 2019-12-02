@@ -12,7 +12,8 @@ router.register(r'repositorios', views.RepositoriosList)
 router.register(r'sistemas', views.SistemasList)
 router.register(r'users', views.UserViewSet)
 router.register(r'userdisciplinas', views.UserDisciplinasList, base_name='userdisciplinas')
-router.register(r'userdisciplinas/$', views.UserDisciplinasList, base_name='userdisciplinas')
+router.register(r'chat', views.ChatList, base_name='chat')
+
 
 # The API URLs are now determined automatically by the router.
 # Additionally, we include the login URLs for the browsable API.

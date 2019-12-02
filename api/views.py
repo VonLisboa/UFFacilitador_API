@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from django.http import Http404
 
 from api.serializers import UserSerializer, UserDisciplinasSerializer
-from api.models import Cursos, Disciplinas, GradeCurricular, Repositorios, Sistemas, UserDisciplinas
+from api.models import Cursos, Disciplinas, GradeCurricular, Repositorios, Sistemas, UserDisciplinas, Chat
 from api.serializers import CursosSerializer, DisciplinasSerializer, \
-    GradeCurricularSerializer, RepositoriosSerializer, SistemasSerializer
+    GradeCurricularSerializer, RepositoriosSerializer, SistemasSerializer, ChatSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -104,3 +104,20 @@ class RepositoriosList(viewsets.ModelViewSet):
 class SistemasList(viewsets.ModelViewSet):
     queryset = Sistemas.objects.all()
     serializer_class = SistemasSerializer
+
+
+class ChatList(viewsets.ModelViewSet):
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+
+    def get_queryset(self):
+        if 'pk' in self.kwargs:
+            return Disciplinas.objects.filter(pk=self.kwargs['pk'])
+
+        offset = self.request.query_params.get('offset')
+        if offset:
+            queryset = Chat.objects.all().order_by('id')[int(offset):]
+        else:
+            queryset = Chat.objects.all()
+
+        return queryset

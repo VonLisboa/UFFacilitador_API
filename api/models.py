@@ -55,3 +55,11 @@ class Sistemas(models.Model):
     url = models.CharField(max_length=255)
     descricao = models.CharField(max_length=255)
     status = models.IntegerField()
+
+
+class Chat(models.Model):
+    # autor is only the admin
+    channel = models.CharField(max_length=20)
+    user = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING)
+    mensagem = models.CharField(max_length=255)
+
